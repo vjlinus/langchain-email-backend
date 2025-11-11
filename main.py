@@ -22,8 +22,8 @@ def get_llm():
 
 @app.post("/generate-email", response_model=EmailResponse)
 def generate_email(data: RequestData):
+    llm = get_llm()
 
-    # You will write your prompt here later:
     prompt = f"""
     [Your prompt goes here — you will write it]
     SDR Notes: {data.notes}
@@ -34,14 +34,9 @@ def generate_email(data: RequestData):
     - email_body
     """
 
-    llm = get_llm()
-result = llm.invoke(prompt)
+    result = llm.invoke(prompt)
 
-
-    # Convert LLM output into structured JSON
     return EmailResponse(
         email_subject="Subject from LLM",
         email_body=result.content
     )
-
-

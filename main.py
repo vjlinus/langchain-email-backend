@@ -4,17 +4,14 @@ from langchain_openai import ChatOpenAI
 
 app = FastAPI()
 
-# Input model
 class RequestData(BaseModel):
     notes: str
     client_email: str
 
-# Output model
 class EmailResponse(BaseModel):
     email_subject: str
     email_body: str
 
-# Create LLM when needed
 def get_llm():
     return ChatOpenAI(model="gpt-4o-mini")
 
@@ -22,7 +19,6 @@ def get_llm():
 def generate_email(data: RequestData):
     llm = get_llm()
 
-    # You will write your own real prompt later
     prompt = f"""
     SDR Notes: {data.notes}
 

@@ -1,3 +1,4 @@
+# dummy change to trigger redeploy
 from fastapi import FastAPI
 from pydantic import BaseModel
 from langchain_openai import ChatOpenAI
@@ -38,3 +39,4 @@ def generate_email(data: RequestData):
         email_subject="Subject from LLM",
         email_body=result.content
     )
+

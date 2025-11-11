@@ -16,7 +16,9 @@ class EmailResponse(BaseModel):
     email_body: str
 
 # Your LLM
-llm = ChatOpenAI(model="gpt-4o-mini")
+def get_llm():
+    return ChatOpenAI(model="gpt-4o-mini")
+
 
 @app.post("/generate-email", response_model=EmailResponse)
 def generate_email(data: RequestData):
@@ -32,11 +34,14 @@ def generate_email(data: RequestData):
     - email_body
     """
 
-    result = llm.invoke(prompt)
+    llm = get_llm()
+result = llm.invoke(prompt)
+
 
     # Convert LLM output into structured JSON
     return EmailResponse(
         email_subject="Subject from LLM",
         email_body=result.content
     )
+
 

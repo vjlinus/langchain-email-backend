@@ -1,36 +1,32 @@
-from fastapi import FastAPI
-from pydantic import BaseModel
 from langchain_openai import ChatOpenAI
+from fastapi import FastAPI, Request
+import json
 
 app = FastAPI()
 
-class RequestData(BaseModel):
-    notes: str
-    client_email: str
+@app.post("/api/generate-email")
+async def generate_email(request: Request):
+    data = await request.json()
+    notes = data.get("notes", "")
+    client_email = data.get("email", "")
 
-class EmailResponse(BaseModel):
-    email_subject: str
-    email_body: str
-
-def get_llm():
-    return ChatOpenAI(model="gpt-4o-mini")
-
-@app.post("/generate-email", response_model=EmailResponse)
-def generate_email(data: RequestData):
-    llm = get_llm()
+    llm = ChatOpenAI(model="gpt-4o-mini")
 
     prompt = f"""
-    SDR Notes: {data.notes}
+    Based on the SDR notes below, generate:
 
-    Generate:
-    - email_subject
-    - email_body
+    - A clear email subject line
+    - A detailed professional email body
+    - Friendly tone
+    SDR Notes:
+    {notes}
     """
 
     result = llm.invoke(prompt)
 
-    return EmailResponse(
-        email_subject="Email Subject Placeholder",
-        email_body=result.content
-    )
+    return {
+        "email_subject": "Generated Email",
+        "email_body": result.content,
+        "client_email": client_email
+    }
 
